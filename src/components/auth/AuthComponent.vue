@@ -1,20 +1,20 @@
 <script setup>
 
 import router from '@/router';
-import { loginStore } from '@/store/auth/optionLogin';
+import { authStore } from '@/store/auth/authstore';
 
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 // library ( validation + notification )
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form } from 'vee-validate';
 import * as yup from 'yup';
 import { toast } from 'vue3-toastify';
 import "vue3-toastify/dist/index.css";
+import BaseInputLabel from '../forminput/BaseInputLabel.vue';
+import BaseInput from '../forminput/BaseInput.vue';
 
 
-const loginstore = loginStore();
-
-const showPassword = ref(false);
+const authstore = authStore();
 
 // for FE
 const schema = yup.object({
@@ -24,8 +24,8 @@ const schema = yup.object({
 
 const handleLogin = async (values) => {
     try {
-        await loginstore.login(values);
-        toast.success(loginstore.notification, { position: "top-right", transition: "slide", autoClose: 500 });
+        await authstore.login(values);
+        toast.success(authstore.notification, { position: "top-right", transition: "slide", autoClose: 500 });
         router.push('/home');
 
     } catch (error) {
@@ -36,16 +36,16 @@ const handleLogin = async (values) => {
 };
 
 onMounted(() => {
-    loginstore.error = null;
-    loginstore.validationErrors = {};
+    authstore.error = null;
+    authstore.validationErrors = {};
 });
 
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6 uppercase">Login</h1>
+    <div class="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+        <div class="w-full max-w-md dark:bg-slate-900 rounded-lg shadow-md p-8">
+            <h1 class="text-2xl font-bold text-center text-white mb-6 uppercase">Login</h1>
 
             <Form :validation-schema="schema" @submit="handleLogin" class="space-y-4">
 
@@ -53,58 +53,18 @@ onMounted(() => {
 
                     <!-- email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email<span class="text-red-500">*</span></label>
-
-                        <Field name="email" v-slot="{ field, errorMessage }">
-                            <input v-bind="field" type="email" placeholder="enter email" :class="[
-                                'w-full px-3 py-2 border-2 outline-none rounded-md',
-                                (errorMessage || loginstore.validationErrors?.email)
-                                    ? 'border-red-400 focus:ring-2 focus:ring-red-400'
-                                    : 'border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-amber-400'
-                            ]" />
-                        </Field>
-
-                        <ErrorMessage name="email" class="text-sm text-red-400" />
-                        <span v-if="loginstore.validationErrors?.email" class="text-sm text-red-400">
-                            {{ loginstore.validationErrors.email[0] }}
-                        </span>
-
-
+                        <BaseInputLabel :html-for="email" :required="true" label="email"></BaseInputLabel>
+                        <BaseInput name="email" :placeholder="'enter email'"
+                            :servererror="authstore.validationErrors?.email" />
                     </div>
 
                     <!-- password -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password<span class="text-red-500">*</span></label>
+                        <BaseInputLabel :html-for="password" :required="true" label="password"></BaseInputLabel>
+                        <BaseInput type="password" name="password" :placeholder="'enter password'"
+                            :servererror="authstore.validationErrors?.password">
+                        </BaseInput>
 
-                        <div class="relative">
-
-                            <Field name="password" v-slot="{ field, errorMessage }">
-                                <input v-bind="field" :type="showPassword ? 'text' : 'password'"
-                                    placeholder="enter password" :class="[
-                                        'w-full px-3 py-2 border-2 outline-none rounded-md',
-                                        (errorMessage || loginstore.validationErrors?.password)
-                                            ? 'border-red-400 focus:ring-2 focus:ring-red-400'
-                                            : 'border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-amber-400'
-                                    ]" />
-
-                                <button type="button" @click="showPassword = !showPassword"
-                                    class="absolute inset-y-0 right-0 p-3 flex items-center text-sm leading-5 text-gray-500 hover:text-amber-600">
-                                    <span v-if="!showPassword">
-                                        <i class="pi pi-eye"></i>
-                                    </span>
-                                    <span v-else>
-                                        <i class="pi pi-eye-slash"></i>
-                                    </span>
-                                </button>
-
-                            </Field>
-
-                        </div>
-
-                        <ErrorMessage name="password" class="text-sm text-red-400" />
-                        <span v-if="loginstore.validationErrors?.password" class="text-sm text-red-400">
-                            {{ loginstore.validationErrors.password[0] }}
-                        </span>
 
                     </div>
 
@@ -117,7 +77,7 @@ onMounted(() => {
                     </div>
 
                     <div>
-                        <p class="text-center">Don't have account?
+                        <p class="text-center dark:text-white">Don't have account?
                             <RouterLink :to="{ name: 'register' }" class="underline text-blue-400">Register
                             </RouterLink>here
                         </p>

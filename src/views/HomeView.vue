@@ -11,7 +11,7 @@ import CountBComponent from '@/components/CountBComponent.vue';
 // pinia
 import { userCounter } from '@/store/option';
 import { userCounterStore } from '@/store/setup';
-import { loginStore } from '@/store/auth/optionLogin';
+import { authStore } from '@/store/auth/authstore';
 
 
 // option api
@@ -21,7 +21,7 @@ const store = userCounter();
 const storeSetup = userCounterStore();
 
 
-const loginstore = loginStore();
+const loginstore = authStore();
 
 </script>
 

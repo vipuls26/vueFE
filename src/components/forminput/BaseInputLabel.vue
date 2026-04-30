@@ -1,6 +1,6 @@
 <template>
 
-    <label :for="htmlFor" class="block text-lg font-medium text-gray-700 mb-1 dark:text-white">
+    <label :for="htmlFor" class="block text-lg font-medium  text-gray-700 mb-1 dark:text-white">
         <slot>{{ label }}</slot>
         <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>

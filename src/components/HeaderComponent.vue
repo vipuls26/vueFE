@@ -47,19 +47,19 @@
 
 
 import router from '@/router';
-import { logoutStore } from '@/store/auth/optionLogout';
 import { toast } from 'vue3-toastify';
 import DarkMode from './utlity/DarkMode.vue';
 import TertiaryButton from './baseButton/TertiaryButton.vue';
+import { authStore } from '@/store/auth/authstore';
 
-const logoutstore = logoutStore();
+const authstore = authStore();
 
 
 const handleLogout = async () => {
     try {
-        await logoutstore.logout();
-        toast.success(logoutstore.logoutNotification, { position: "top-right", autoClose: 1000, transition: "slide" });
-        router.push('/');
+        await authstore.logout();
+        toast.success(authstore.logoutNotification, { position: "top-right", autoClose: 1000, transition: "slide" });
+        router.push({ name: 'auth'});
     } catch (err) {
         toast.error('logout failed');
         router.push('/');

@@ -7,7 +7,6 @@ import "vue3-toastify/dist/index.css"
 
 import { blogStore } from '@/store/blog/blogApi';
 import { ref, watch, onMounted } from 'vue';
-import { loginStore } from '@/store/auth/optionLogin';
 import SecondaryButton from '../baseButton/SecondaryButton.vue';
 import PrimaryButton from '../baseButton/PrimaryButton.vue';
 import router from '@/router';
@@ -19,11 +18,14 @@ import ContentComponent from '../blog/detail/ContentComponent.vue';
 import StatusComponent from '../blog/detail/StatusComponent.vue';
 import SearchButton from '../utlity/SearchButton.vue';
 import PaginationComponent from '../blog/pagination/PaginationComponent.vue';
+import UsernameComponent from '../blog/detail/UsernameComponent.vue';
+import BlogstatusComponent from '../blog/detail/BlogstatusComponent.vue';
+import { authStore } from '@/store/auth/authstore';
 
 const blogstore = blogStore();
 const searchQuery = ref(null);
 
-const loginstore = loginStore();
+const authstore = authStore();
 
 const handleBtn = () => {
     router.push({ name: 'addBlog' })
@@ -37,7 +39,6 @@ onMounted(() => {
 
 let timer;
 watch(searchQuery, (newValue) => {
-
     clearTimeout(timer);
     timer = setTimeout(() => {
         blogstore.search = newValue;
@@ -52,6 +53,8 @@ watch(searchQuery, (newValue) => {
     <HeaderComponent />
 
     <div class="dakr:bg-slate-900 p-8">
+
+        <!-- category + search -->
         <div class="flex justify-between pb-3">
 
             <!-- blog category -->
@@ -150,17 +153,6 @@ watch(searchQuery, (newValue) => {
         <!-- blog -->
         <div v-else>
             <div class="flex space-x-4 gap-3">
-                <!-- add btn -->
-                <!-- <RouterLink :to="{ name: 'addBlog' }"
-                    class="px-5 py-2.5 rounded-4xl bg-blue-500 text-white font-semibold text-sm shadow-sm hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors">
-                    Add blog
-                </RouterLink> -->
-
-                <!-- sync btn -->
-                <!-- <button @click="blogstore.syncDataBase"
-                    class="px-5 py-2.5 rounded-4xl bg-yellow-500 text-white font-semibold text-sm shadow-sm hover:bg-yellow-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors">
-                    Sync Db
-                </button> -->
 
                 <PrimaryButton @click="handleBtn">
                     Add Blog
@@ -174,46 +166,40 @@ watch(searchQuery, (newValue) => {
 
             <div v-if="blogstore.filterBlog">
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 p-3">
-                    <div v-for="blog in blogstore.filterBlog" :key="blog.id" class="flex">
+
+                    <div v-for="blog in blogstore.filterBlog" :key="blog?.id" class="flex">
 
                         <RouterLink :to="{ name: 'blogDetail', params: { id: blog.id } }" class="w-full">
-                            <div class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:bg-slate-800  h-full transition-all duration-300 hover:shadow-lg hover:border-gray-300">
+                            <div
+                                class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:bg-slate-800  h-full transition-all duration-300 hover:shadow-lg hover:border-gray-300">
 
                                 <!-- image -->
-                                <CardImage :path="blog.image.image_path" :alt-text="blog.title"></CardImage>
-
+                                <CardImage :path="blog?.image?.image_path" :alt-text="blog.title"></CardImage>
 
                                 <!-- detail -->
                                 <div class="flex flex-1 flex-col justify-between p-4">
 
                                     <div>
-                                        <TitleComponent :title="blog.title"></TitleComponent>
-                                        <BadgeComponent :category="blog.category.name"></BadgeComponent>
-                                        <ContentComponent :content="blog.content"></ContentComponent>
+                                        <TitleComponent :title="blog?.title"></TitleComponent>
+                                        <BadgeComponent :category="blog?.category?.name"></BadgeComponent>
+                                        <ContentComponent :content="blog?.content"></ContentComponent>
                                     </div>
 
-                                    <div v-if="loginstore.user === blog.user.email">
-                                      <StatusComponent ></StatusComponent>
+                                    <div v-if="authstore.user === blog.user?.email">
+                                        <StatusComponent> </StatusComponent>
                                     </div>
 
-                                    <div class="mt-6 flex items-center justify-between gap-4 pt-4 border-t border-gray-100">
+                                    <div
+                                        class="mt-6 flex items-center justify-between gap-4 pt-4 border-t border-gray-100">
 
                                         <div class="flex items-center gap-2">
-                                            
                                             <ProfileImage :path="'profile/69d383729304e.png'"></ProfileImage>
-
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ blog.user.name }} 
-                                            </p>
+                                            <UsernameComponent> {{ blog?.user?.name }}</UsernameComponent>
                                         </div>
 
-                                        <p
-                                            class="text-sm text-gray-500 dark:bg-gray-100 bg-gray-100 px-2 py-1 rounded-full">
-                                            {{ blog.status }}
-                                        </p>
+                                        <BlogstatusComponent> {{ blog?.status }} </BlogstatusComponent>
 
                                     </div>
-
                                 </div>
 
                             </div>
@@ -223,44 +209,9 @@ watch(searchQuery, (newValue) => {
                 </div>
 
                 <!-- pagination -->
-                 <!-- <div class="mt-8 flex justify-center items-center gap-2 pb-6">
+                <PaginationComponent :current_page="blogstore.pagination.current_page"
+                    :last_page="blogstore.pagination.last_page"></PaginationComponent>
 
-                    <button @click="blogstore.fetchBlogs(1)" :disabled="blogstore.pagination.current_page === 1"
-                        class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed">
-                        first
-                    </button>
-
-
-                    <button @click="blogstore.fetchBlogs(blogstore.pagination.current_page - 1)"
-                        :disabled="blogstore.pagination.current_page === 1"
-                        class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed">
-                        prev
-                    </button>
-
-
-                    <span class="text-sm font-medium px-2">
-                        Page {{ blogstore.pagination.current_page }} of
-                        {{ blogstore.pagination.last_page }}
-                    </span>
-
-                    <button @click="blogstore.fetchBlogs(blogstore.pagination.current_page + 1)"
-                        :disabled="blogstore.pagination.current_page === blogstore.pagination.last_page"
-                        class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed">
-                        next
-                    </button>
-
-
-                    <button @click="blogstore.fetchBlogs(blogstore.pagination.last_page)"
-                        :disabled="blogstore.pagination.current_page === blogstore.pagination.last_page"
-                        class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed">
-                        last
-
-                    </button>
-                </div> 
-          -->
-         
-                <PaginationComponent :current_page="blogstore.pagination.current_page" :last_page="blogstore.pagination.last_page"></PaginationComponent>
-            
             </div>
 
             <div v-else>
