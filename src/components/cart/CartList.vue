@@ -9,8 +9,6 @@ const cart = userCartOption();
 // totoal cart item
 const cartItem = cart.cartItem;
 
-// console.log(cartItem.length);
-
 </script>
 
 <template>

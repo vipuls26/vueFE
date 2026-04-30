@@ -54,40 +54,33 @@ onUnmounted(() => {
             <Form :validation-schema="schema" @submit="handleRegister" class="space-y-4">
 
                 <div class="flex flex-col gap-4">
-
                     <!-- name -->
                     <div>
-                        <BaseInputLabel label="name" :html-for="name" :required="true" />
+                        <BaseInputLabel label="name" html-for="name" :required="true" />
                         <BaseInput name="name" :placeholder="'enter name'"
                             :servererror="authstore.validationErrors?.name" />
                     </div>
-
                     <!-- email -->
                     <div>
-                        <BaseInputLabel label="email" :html-for="email" :required="true" />
+                        <BaseInputLabel label="email" html-for="email" :required="true" />
                         <BaseInput name="email" :placeholder="'enter email'"
                             :servererror="authstore.validationErrors?.email" />
                     </div>
-
                     <!-- password -->
                     <div>
-                        <BaseInputLabel label="password" :html-for="password" :required="true" />
+                        <BaseInputLabel label="password" html-for="password" :required="true" />
                         <BaseInput type="password" name="password" :placeholder="'enter password'"
                             :servererror="authstore.validationErrors?.password" />
                     </div>
-
                     <!-- confirm password password_confirmation -->
-
                     <div>
-                        <BaseInputLabel label="password_confirmation" :html-for="password_confirmation" :required="true" />
+                        <BaseInputLabel label="password_confirmation" html-for="password_confirmation" :required="true" />
                         <BaseInput type="password" name="password_confirmation" :placeholder="'enter confirm password'"
                             :servererror="authstore.validationErrors?.password_confirmation" />
                     </div>
-
                     <!-- role -->
                     <div>
-                        <BaseInputLabel label="role" :html-for="role" :required="true" />
-
+                        <BaseInputLabel label="role" html-for="role" :required="true" />
                         <div class="flex gap-3">
                             <div class="flex items-center gap-1">
                                 <Field name="role" type="radio" value="user" id="user"
