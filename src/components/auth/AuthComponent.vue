@@ -53,19 +53,17 @@ onMounted(() => {
 
                     <!-- email -->
                     <div>
-                        <BaseInputLabel :html-for="email" :required="true" label="email"></BaseInputLabel>
+                        <BaseInputLabel label="Email" html-for="email" :required="true"> </BaseInputLabel>
                         <BaseInput name="email" :placeholder="'enter email'"
                             :servererror="authstore.validationErrors?.email" />
                     </div>
 
                     <!-- password -->
                     <div>
-                        <BaseInputLabel :html-for="password" :required="true" label="password"></BaseInputLabel>
+                        <BaseInputLabel html-for="password" :required="true" label="Password"></BaseInputLabel>
                         <BaseInput type="password" name="password" :placeholder="'enter password'"
                             :servererror="authstore.validationErrors?.password">
                         </BaseInput>
-
-
                     </div>
 
                     <!-- button -->

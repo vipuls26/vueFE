@@ -4,8 +4,6 @@ import HomeView from '../views/HomeView.vue'
 
 // cart
 import CartList from '@/components/cart/CartList.vue'
-// product
-import ProductComponent from '@/components/product/ProductComponent.vue'
 
 
 // api
@@ -39,13 +37,6 @@ const routes = [
     path: '/home',
     name: 'dashboard',
     component: HomeView,
-  },
-
-  // product
-  {
-    path: '/products',
-    name: 'products',
-    component: ProductComponent,
   },
 
   // cart 
