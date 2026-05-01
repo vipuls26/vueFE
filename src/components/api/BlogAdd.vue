@@ -68,8 +68,6 @@ import BaseInput from '../forminput/BaseInput.vue';
 import BaseInputLabel from '../forminput/BaseInputLabel.vue';
 
 const blogstore = blogStore();
-
-
 const schema = yup.object({
     title: yup.string().required('title is required'),
     content: yup.string()
@@ -86,7 +84,6 @@ const handleAddBlog = async (data) => {
         await blogstore.addBlog(data);
         toast.success(`blogstore.notification`, { position: "top-right", transition: "slide", autoClose: 500 });
         router.push({ name: 'blogApi' })
-
     } catch (error) {
         if (error.response && error.response.status === 422) {
             toast.error(`blog add failed. please try again`, { position: "top-right", transition: "slide", autoClose: 500 })

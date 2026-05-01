@@ -6,9 +6,9 @@
                     <div class="flex items-center">
 
                         <button @click="isMenuOpen = !isMenuOpen"
-                            class="lg:hidden p-2 rounded-md text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
+                            class="lg:hidden rounded-md text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
                             <span class="sr-only">Open menu</span>
-                            <i class="pi pi-align-justify" style="font-size: 2rem"></i>
+                            <i class="pi pi-bars p-1" style="font-size: 2rem"></i>
                         </button>
                         <RouterLink :to="{ name: 'dashboard' }"
                             class="text-2xl font-bold text-green-600 tracking-tight">
@@ -55,9 +55,8 @@
                             :class="{ 'exact-active': $route.path.startsWith('/blog') }">
                             Blog
                         </RouterLink>
-                        <TertiaryButton @click="handleLogout()" class="w-25 md:hidden text-center">
-                            Logout
-                        </TertiaryButton>
+
+                        <BaseButton  label="Logout" variant="tertiary" class="w-25 md:hidden text-center" @click="handleLogout()"></BaseButton> 
                     </div>
                 </div>
             </nav>
@@ -73,6 +72,7 @@ import DarkMode from './utlity/DarkMode.vue';
 import TertiaryButton from './baseButton/TertiaryButton.vue';
 import { authStore } from '@/store/auth/authStore';
 import { ref } from 'vue';
+import BaseButton from './baseButton/BaseButton.vue';
 
 const isMenuOpen = ref(false);
 

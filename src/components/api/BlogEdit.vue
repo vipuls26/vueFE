@@ -12,9 +12,9 @@ import PrimaryButton from '../baseButton/PrimaryButton.vue';
 import SecondaryButton from '../baseButton/SecondaryButton.vue';
 import BaseInputLabel from '../forminput/BaseInputLabel.vue';
 import BaseInput from '../forminput/BaseInput.vue';
+import BaseButton from '../baseButton/BaseButton.vue';
 
 const blogstore = blogStore();
-
 const schema = yup.object({
     title: yup.string().required('title is required'),
     content: yup.string()
@@ -29,14 +29,12 @@ const route = useRoute();
 const editblogId = Number(route.params.id);
 const blog = blogstore.blogs.find(obj => obj.id === editblogId);
 
-
 const formData = ref({
     title: '',
     content: '',
     category: '',
     image: '',
 });
-
 
 if (blog) {
     formData.value = {
@@ -102,12 +100,8 @@ const handleCancle = (() => {
                 </div>
                 <!-- btn -->
                 <div class="flex justify-center gap-3">
-                    <PrimaryButton type="submit">
-                        Update
-                    </PrimaryButton>
-                    <SecondaryButton @click="handleCancle" type="button">
-                        Cancel
-                    </SecondaryButton>
+                    <BaseButton label="Update" type="submit" variant="primary"></BaseButton>
+                    <BaseButton label="Cancel" @click="handleCancle" variant="secondary"></BaseButton>
                 </div>
             </div>
         </Form>

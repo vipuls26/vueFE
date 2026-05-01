@@ -24,7 +24,7 @@ export const blogStore = defineStore('blogStore', () => {
     const currentUser = ref(null);
 
     // blog selected category
-    const selectedCategory = ref(0);
+    // const selectedCategory = ref(0);
     const selectedCategories = ref([]);
 
     // blog detail
@@ -148,11 +148,11 @@ export const blogStore = defineStore('blogStore', () => {
     function setCategory(category) {
         const id = category.id;
 
-        const index = selectedCategories.value.indexOf(id);
-        if (index === -1) {
-            selectedCategories.value.push(id);
+        if (selectedCategories.value.includes(id)) {
+            selectedCategories.value =
+                selectedCategories.value.filter(c => c !== id);
         } else {
-            selectedCategories.value.splice(index, 1);
+            selectedCategories.value = [...selectedCategories.value, id];
         }
     }
 
@@ -275,10 +275,10 @@ export const blogStore = defineStore('blogStore', () => {
         error.value = null;
 
         try {
-            const blogstore = blogStore();
+
             const targetBlogId = Number(blogId);
 
-            blogContent.value = blogstore.blogs.find(
+            blogContent.value = blogs.value.find(
                 (blogdetail) => blogdetail.id === targetBlogId
             );
 
@@ -295,36 +295,35 @@ export const blogStore = defineStore('blogStore', () => {
     const search = ref('');
 
     const filterBlog = computed(() => {
-
-        let results = blogs.value;
+        let results = [...blogs.value];
 
         if (selectedCategories.value.length > 0) {
-            results = results.filter(blog => selectedCategories.value.includes(blog.category_id));
-        }
-
-        if (search.value.trim() !== '') {
             results = results.filter(blog =>
-                blog.title.toLowerCase().includes(search.value.toLowerCase())
+                selectedCategories.value.includes(blog.category_id)
             );
         }
+
+        if (search.value.trim()) {
+            const query = search.value.toLowerCase();
+            results = results.filter(blog =>
+                blog.title.toLowerCase().includes(query)
+            );
+        }
+
         return results;
     });
-
-    const emailToSearch = authstore.user;
-    const isOwner = blogs.value.some(blog => blog.user.email === emailToSearch);
-
 
     return {
         blogs, blogNotification,
         blogContent, blogDetail,
         loading, pagination, error,
         fetchBlogs, fetchCategories,
-        category, setCategory, filterBlog, selectedCategory,
+        category, setCategory, filterBlog,
         clearFilters, selectedCategories, search, currentUser,
         syncDataBase, clearBlogs,
         deleteBlog, notification,
         editBlog, addBlog,
-        validationErrors, isOwner
+        validationErrors
     };
 
 });
