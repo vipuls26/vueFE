@@ -47,8 +47,8 @@ onUnmounted(() => {
 
 <template>
 
-    <div class="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-        <div class="w-full max-w-md bg-slate-900 rounded-lg shadow-md p-8">
+    <div class="min-h-screen flex items-center justify-center bg-white p-4">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
             <h1 class="text-2xl font-bold text-center text-white mb-6 uppercase">Register</h1>
 
             <Form :validation-schema="schema" @submit="handleRegister" class="space-y-4">
@@ -56,42 +56,42 @@ onUnmounted(() => {
                 <div class="flex flex-col gap-4">
                     <!-- name -->
                     <div>
-                        <BaseInputLabel label="name" html-for="name" :required="true" />
+                        <BaseInputLabel label="Name" html-for="name" :required="true" />
                         <BaseInput name="name" :placeholder="'enter name'"
                             :servererror="authstore.validationErrors?.name" />
                     </div>
                     <!-- email -->
                     <div>
-                        <BaseInputLabel label="email" html-for="email" :required="true" />
+                        <BaseInputLabel label="Email" html-for="email" :required="true" />
                         <BaseInput name="email" :placeholder="'enter email'"
                             :servererror="authstore.validationErrors?.email" />
                     </div>
                     <!-- password -->
                     <div>
-                        <BaseInputLabel label="password" html-for="password" :required="true" />
+                        <BaseInputLabel label="Password" html-for="password" :required="true" />
                         <BaseInput type="password" name="password" :placeholder="'enter password'"
                             :servererror="authstore.validationErrors?.password" />
                     </div>
                     <!-- confirm password password_confirmation -->
                     <div>
-                        <BaseInputLabel label="password_confirmation" html-for="password_confirmation"
+                        <BaseInputLabel label="Confirm password" html-for="password_confirmation"
                             :required="true" />
                         <BaseInput type="password" name="password_confirmation" :placeholder="'enter confirm password'"
                             :servererror="authstore.validationErrors?.password_confirmation" />
                     </div>
                     <!-- role -->
                     <div>
-                        <BaseInputLabel label="role" html-for="role" :required="true" />
+                        <BaseInputLabel label="Role" html-for="role" :required="true" />
                         <div class="flex gap-3">
                             <div class="flex items-center gap-1">
                                 <Field name="role" type="radio" value="user" id="user"
-                                    class="h-4 w-4 border-gray-300 text-amber-500 focus:ring-amber-400" />
-                                <label for="user" class="ml-2 text-lg  text-white">User</label>
+                                    class="h-4 w-4 border-gray-300  text-amber-500 focus:ring-amber-400" />
+                                <label for="user" class="ml-2 text-lg  text-gray-800">user</label>
                             </div>
                             <div class="flex items-center gap-1">
                                 <Field name="role" type="radio" value="admin" id="admin"
                                     class="h-4 w-4 border-gray-300 text-amber-500 focus:ring-amber-400" />
-                                <label for="admin" class="ml-2 text-lg text-white">Admin</label>
+                                <label for="admin" class="ml-2 text-lg text-gray-800">admin</label>
                             </div>
 
                             <span v-if="authstore.validationErrors?.role" class="text-sm text-red-400">

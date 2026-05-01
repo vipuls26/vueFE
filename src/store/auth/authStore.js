@@ -104,6 +104,24 @@ export const authStore = defineStore('authStore', () => {
         }
     }
 
+    async function fetchUser() {
+        try {
+            const token = localStorage.getItem('auth_token');
+            const response = await apiUrl.post('/usertoken', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('auth_token');
+                router.push({ name: 'auth' });
+            } else {
+                console.error('Fetch user failed due to other error:', error.message);
+            }
+        }
+    }
 
-    return { user, token, userData, error, notification, validationErrors, login, logoutNotification, logout, loading, error, registerNotification, validationErrors, register };
+
+    return { user, token, userData, error, notification, validationErrors, login, logoutNotification, logout, loading, error, registerNotification, validationErrors, register, fetchUser };
 });

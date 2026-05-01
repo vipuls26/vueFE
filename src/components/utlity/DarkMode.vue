@@ -22,8 +22,16 @@ onMounted(() => {
 </script>
 
 <template>
-    <button @click="toggleDark" :class="['text-white rounded-4xl',
-        (isDark) ? 'bg-yellow-400' : 'bg-slate-700' ]">
-        <i :class="isDark ? 'pi pi-sun p-3' : 'pi pi-moon p-3'"></i>
+
+    <button @click="toggleDark" :class="[
+        'text-white rounded-4xl transition-colors duration-500',
+        isDark ? 'bg-yellow-400' : 'bg-slate-700'
+    ]">
+        <i :class="[
+            isDark ? 'pi pi-sun' : 'pi pi-moon',
+            'p-3 block transition-all duration-1000 transform',
+            isDark ? 'rotate-0' : 'rotate-270'
+        ]"></i>
     </button>
+
 </template>

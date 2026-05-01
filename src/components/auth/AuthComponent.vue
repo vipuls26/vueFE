@@ -43,8 +43,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-        <div class="w-full max-w-md dark:bg-slate-900 rounded-lg shadow-md p-8">
+    <div class="min-h-screen flex items-center justify-center bg-white-900 p-4">
+        <div class="w-full max-w-md dark:bg-white-900 rounded-lg shadow-md p-8">
             <h1 class="text-2xl font-bold text-center text-white mb-6 uppercase">Login</h1>
 
             <Form :validation-schema="schema" @submit="handleLogin" class="space-y-4">

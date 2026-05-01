@@ -5,7 +5,7 @@
             {{ label }}
         </slot>
 
-    </button>
+    </button>   
 </template>
 
 <script setup>

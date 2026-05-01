@@ -12,15 +12,11 @@ import CategoryDate from '../blogdetail/CategoryDate.vue';
 import TitleContentComponent from '../blogdetail/TitleContentComponent.vue';
 import { authStore } from '@/store/auth/authStore';
 
-
 const route = useRoute();
 const blogstore = blogStore();
 const authstore = authStore();
-
-
 const blogId = route.params.id;
 const isEdit = ref(false);
-
 
 const editToggle = () => {
     isEdit.value = !isEdit.value;
@@ -36,13 +32,11 @@ const deleteBlog = async () => {
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel'
     });
-
     if (result.isConfirmed) {
         blogstore.deleteBlog(blogId);
     } else {
         Swal.fire('Cancelled', 'blog is not deleted', 'error');
     }
-
 };
 
 onMounted(async () => {
@@ -71,8 +65,15 @@ onMounted(async () => {
             <div class="p-6">
 
                 <div v-if="authstore.user === blogstore.blogContent.user.email" class="flex gap-2 mb-6">
-                    <PrimaryButton @click="editToggle"> {{ isEdit ? 'view' : 'edit' }} </PrimaryButton>
-                    <TertiaryButton @click="deleteBlog">Delete</TertiaryButton>
+                   
+                    <PrimaryButton @click="editToggle">
+                        <Transition name="fade" mode="out-in">
+                            <span :key="isEdit ? 'view' : 'edit'">
+                                {{ isEdit ? 'view' : 'edit' }}
+                            </span>
+                        </Transition>
+                    </PrimaryButton>
+                    <TertiaryButton @click="deleteBlog" label="Delete" />
                 </div>
 
                 <div v-if="!isEdit">
@@ -84,8 +85,7 @@ onMounted(async () => {
                 </div>
 
                 <div v-else class="mt-4 p-2">
-
-                    <hr class="bg-black">
+                    <hr class="pt-2">
                     <BlogEdit :blogData="blogstore.blogContent" />
                 </div>
             </div>

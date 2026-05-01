@@ -7,6 +7,7 @@ import HeaderComponent from './components/HeaderComponent.vue'
 import FooterComponent from './components/FooterComponent.vue'
 import { createPinia } from 'pinia'
 import apiUrl from './services/axios'
+import { authStore } from './store/auth/authStore'
 
 const app = createApp(App)
 
@@ -17,6 +18,9 @@ app.component('FooterComponent', FooterComponent)
 // setup pinia 
 const pinia = createPinia()
 app.use(pinia)
+
+// const authstore = authStore();
+// authstore.fetchUser();
 
 app.config.globalProperties.$http = apiUrl;
 

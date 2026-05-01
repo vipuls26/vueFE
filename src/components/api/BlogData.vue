@@ -1,30 +1,19 @@
 <script setup>
 
 import HeaderComponent from '../HeaderComponent.vue';
-
-// notification
 import "vue3-toastify/dist/index.css"
-
 import { blogStore } from '@/store/blog/blogStore';
 import { ref, watch, onMounted } from 'vue';
-import SecondaryButton from '../baseButton/SecondaryButton.vue';
-import PrimaryButton from '../baseButton/PrimaryButton.vue';
 import router from '@/router';
-import CardImage from '../blog/image/CardImage.vue';
-import ProfileImage from '../blog/image/ProfileImage.vue';
-import TitleComponent from '../blog/detail/TitleComponent.vue';
-import BadgeComponent from '../blog/detail/BadgeComponent.vue';
-import ContentComponent from '../blog/detail/ContentComponent.vue';
-import StatusComponent from '../blog/detail/StatusComponent.vue';
-import SearchButton from '../utlity/SearchButton.vue';
 import PaginationComponent from '../blog/pagination/PaginationComponent.vue';
-import UsernameComponent from '../blog/detail/UsernameComponent.vue';
-import BlogstatusComponent from '../blog/detail/BlogstatusComponent.vue';
 import { authStore } from '@/store/auth/authStore';
+import BaseButton from '../baseButton/BaseButton.vue';
+import BlogCard from '../blog/detail/BlogCard.vue';
+import BlogFilter from '../ui/BlogFilter.vue';
+import NoBlogFound from '../ui/NoBlogFound.vue';
+import SkeletonLoading from '../ui/SkeletonLoading.vue';
 
 const blogstore = blogStore();
-const searchQuery = ref(null);
-
 const authstore = authStore();
 
 const handleBtn = () => {
@@ -37,7 +26,7 @@ onMounted(() => {
 });
 
 
-
+const searchQuery = ref('');
 let timer;
 watch(searchQuery, (newValue) => {
     clearTimeout(timer);
@@ -56,211 +45,43 @@ watch(searchQuery, (newValue) => {
     <div class="dakr:bg-slate-900 p-8">
 
         <!-- category + search -->
-        <!-- <div class="flex justify-between pb-3">
-            <div class="flex flex-wrap gap-2">
-
-                <button @click="blogstore.clearFilters()"
-                    class="bg-transparent hover:bg-blue-500 text-blue-700 dark:text-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-4xl">
-                    All
-                </button>
-
-                <div v-for="category in blogstore.category" :key="category.id">
-                    <button @click="blogstore.setCategory(category)" :class="[
-                        blogstore.selectedCategories.includes(category.id)
-                            ? 'bg-blue-500 text-white border-transparent'
-                            : 'bg-transparent text-blue-700 border-blue-500 dark:text-white'
-                    ]"
-                        class="hover:bg-blue-600 font-semibold py-2 px-4 border hover:text-white rounded-4xl transition-colors">
-                        {{ category.name }}
-                    </button>
-                </div>
-
-            </div>
-            <SearchButton v-model="searchQuery" placeholder="search blogs" />
-        </div> -->
-
-        <div class="flex justify-between pb-3">
-            <div class="flex flex-wrap gap-2">
-
-                <div class="md:hidden">
-                    <select
-                        @change="(e) => e.target.value === 'all' ? blogstore.clearFilters() : blogstore.setCategory({ id: parseInt(e.target.value) })"
-                        class="bg-white dark:bg-gray-800 border border-blue-500 text-blue-700 dark:text-white py-2 px-4 rounded-xl focus:outline-none">
-                        <option value="all">All Categories</option>
-                        <option v-for="category in blogstore.category" :key="category.id" :value="category.id"
-                            :selected="blogstore.selectedCategories.includes(category.id)">
-                            {{ category.name }}
-                        </option>
-                    </select>
-
-                    <SearchButton v-model="searchQuery" class="md:hidden lg:hidden" placeholder="search blogs" />
-                </div>
-
-
-                <div class="hidden md:flex flex-wrap gap-2">
-                    <div>
-                        <button @click="blogstore.clearFilters()"
-                            class="bg-transparent hover:bg-blue-500 text-blue-700 dark:text-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-4xl">
-                            All
-                        </button>
-                    </div>
-
-
-                    <div v-for="category in blogstore.category" :key="category.id">
-                        <button @click="blogstore.setCategory(category)"
-                            :class="[blogstore.selectedCategories.includes(category.id) ? 'bg-blue-500 text-white border-transparent' : 'bg-transparent text-blue-700 border-blue-500 dark:text-white']"
-                            class="hover:bg-blue-600 font-semibold py-2 px-4 border hover:text-white rounded-4xl transition-color">
-                            {{ category.name }}
-                        </button>
-                    </div>
-
-
-                    <SearchButton v-model="searchQuery" placeholder="search blogs" />
-                </div>
-            </div>
-
-
-        </div>
-
-
+        <BlogFilter :categories="blogstore.category" :selected-categories="blogstore.selectedCategories"
+            @category="blogstore.setCategory" @clearFilters="blogstore.clearFilters"
+            @update:search="val => blogstore.search = val" />
 
         <!-- loading -->
-        <div v-if="blogstore.loading"
-            class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-
-            <div v-for="i in 4" :key="i" class="p-3">
-                <div
-                    class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white animate-pulse">
-
-                    <div class="aspect-video w-full bg-gray-300"></div>
-
-                    <div class="flex flex-1 flex-col justify-between p-4 space-y-4">
-                        <div>
-
-                            <div class="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
-
-                            <div class="h-4 bg-gray-300 rounded w-1/4 mb-4"></div>
-
-                            <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                            <div class="h-3 bg-gray-200 rounded w-5/6"></div>
-                        </div>
-
-
-                        <div class="flex items-center justify-between mt-6">
-                            <div class="flex items-center gap-2">
-                                <div class="h-8 w-8 rounded-full bg-gray-300"></div>
-                                <div class="h-4 bg-gray-300 rounded w-12"></div>
-                            </div>
-                            <div class="h-4 bg-gray-300 rounded w-16"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div v-if="blogstore.loading">
+            <SkeletonLoading></SkeletonLoading>
         </div>
 
         <!-- error -->
         <div v-else-if="blogstore.error && blogstore.blogs.length === 0">
             <p> error occur while fetching data </p>
-            <div v-for="i in 4" :key="i" class="p-3">
-                <div
-                    class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white animate-pulse">
-
-                    <div class="aspect-video w-full bg-gray-300"></div>
-
-                    <div class="flex flex-1 flex-col justify-between p-4 space-y-4">
-                        <div>
-
-                            <div class="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
-
-                            <div class="h-4 bg-gray-300 rounded w-1/4 mb-4"></div>
-
-                            <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                            <div class="h-3 bg-gray-200 rounded w-5/6"></div>
-                        </div>
-
-
-                        <div class="flex items-center justify-between mt-6">
-                            <div class="flex items-center gap-2">
-                                <div class="h-8 w-8 rounded-full bg-gray-300"></div>
-                                <div class="h-4 bg-gray-300 rounded w-12"></div>
-                            </div>
-                            <div class="h-4 bg-gray-300 rounded w-16"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SkeletonLoading></SkeletonLoading>
         </div>
 
         <!-- blog -->
         <div v-else>
             <div class="flex space-x-4 gap-3">
-
-                <PrimaryButton @click="handleBtn">
-                    Add Blog
-                </PrimaryButton>
-
-                <SecondaryButton @click="blogstore.syncDataBase">
-                    sync now
-                </SecondaryButton>
-
+                <BaseButton @click="handleBtn" label="Add Blog" variant="primary" />
+                <BaseButton @click="blogstore.syncDataBase" label="sync now" variant="secondary" />
             </div>
 
-            <div v-if="blogstore.filterBlog">
-                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 p-3">
+            <div v-if="blogstore.filterBlog && blogstore.filterBlog.length > 0">
 
-                    <div v-for="blog in blogstore.filterBlog" :key="blog?.id" class="flex">
-
-                        <RouterLink :to="{ name: 'blogDetail', params: { id: blog.id } }" class="w-full">
-                            <div
-                                class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:bg-slate-800  h-full transition-all duration-300 hover:shadow-lg hover:border-gray-300">
-
-                                <!-- image -->
-                                <CardImage :path="blog?.image?.image_path" :alt-text="blog.title"></CardImage>
-
-                                <!-- detail -->
-                                <div class="flex flex-1 flex-col justify-between p-4">
-
-                                    <div>
-                                        <TitleComponent :title="blog?.title"></TitleComponent>
-                                        <BadgeComponent :category="blog?.category?.name"></BadgeComponent>
-                                        <ContentComponent :content="blog?.content"></ContentComponent>
-                                    </div>
-                                    
-                                    <div v-if="blogstore.isOwner">
-                                        <StatusComponent> </StatusComponent>
-                                    </div>
-
-                                    <div
-                                        class="mt-6 flex items-center justify-between gap-4 pt-4 border-t border-gray-100">
-
-                                        <div class="flex items-center gap-2">
-                                            <ProfileImage :path="'profile/69d383729304e.png'"></ProfileImage>
-                                            <UsernameComponent> {{ blog?.user?.name }}</UsernameComponent>
-                                        </div>
-
-                                        <BlogstatusComponent> {{ blog?.status }} </BlogstatusComponent>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </RouterLink>
-
-                    </div>
+                <div class="mt-6 grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2  lg:grid-cols-4 xl:gap-x-8 p-3">
+                    <BlogCard v-for="blog in blogstore.filterBlog" :key="blog.id" :current-email="authstore.user"
+                        :blog="blog"></BlogCard>
                 </div>
 
                 <!-- pagination -->
                 <PaginationComponent :current_page="blogstore.pagination.current_page"
                     :last_page="blogstore.pagination.last_page"></PaginationComponent>
-
             </div>
 
             <div v-else>
-                <div class="text-center text-2xl p-10">
-                    no blog found of this category
-                </div>
+                <NoBlogFound></NoBlogFound>
             </div>
-
         </div>
     </div>
 
