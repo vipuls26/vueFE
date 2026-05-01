@@ -3,7 +3,8 @@
     <HeaderComponent />
 
     <div class="flex items-center justify-center">
-        <div class="relative mx-auto w-7xl overflow-hidden bg-white dark:bg-slate-900 rounded-lg shadow-sm m-5 border-2border-slate-50">
+        <div
+            class="relative mx-auto w-7xl overflow-hidden bg-white dark:bg-slate-900 rounded-lg shadow-sm m-5 border-2border-slate-50">
             <h1 class="text-2xl font-bold text-center text-gray-800 mb-6 uppercase dark:text-white p-3">Add Blog</h1>
 
             <Form :validation-schema="schema" @submit="handleAddBlog">
@@ -61,7 +62,7 @@ import router from '@/router';
 import * as yup from 'yup';
 import { toast } from 'vue3-toastify';
 import { Form } from 'vee-validate';
-import { blogStore } from '@/store/blog/blogApi';
+import { blogStore } from '@/store/blog/blogStore';
 import PrimaryButton from '../baseButton/PrimaryButton.vue';
 import BaseInput from '../forminput/BaseInput.vue';
 import BaseInputLabel from '../forminput/BaseInputLabel.vue';

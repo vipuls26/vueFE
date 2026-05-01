@@ -96,8 +96,8 @@ const router = createRouter({
   history: isServer ? createMemoryHistory(import.meta.env.BASE_URL) : createWebHistory(import.meta.env.BASE_URL),
   routes,
 
-  linkActiveClass: 'active',
-  linkExactActiveClass: 'exact-active',
+  // linkActiveClass: 'active',
+  // linkExactActiveClass: 'exact-active',
 })
 
 

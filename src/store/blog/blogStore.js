@@ -4,6 +4,7 @@ import { computed, reactive, ref } from "vue";
 import Swal from "sweetalert2";
 import { toast } from "vue3-toastify";
 import router from "@/router";
+import { authStore } from "../auth/authStore";
 
 
 export const blogStore = defineStore('blogStore', () => {
@@ -13,6 +14,8 @@ export const blogStore = defineStore('blogStore', () => {
         current_page: 1,
         last_page: 1,
     });
+
+    const authstore = authStore();
 
     const blogNotification = ref("");
     const notification = ref(null);
@@ -254,7 +257,7 @@ export const blogStore = defineStore('blogStore', () => {
                     'content-type': 'multipart/form-data',
                 }
             });
-                   
+
             notification.value = response.data.message;
         } catch (err) {
             if (err.response && err.response.status === 422) {
@@ -307,6 +310,9 @@ export const blogStore = defineStore('blogStore', () => {
         return results;
     });
 
+    const emailToSearch = authstore.user;
+    const isOwner = blogs.value.some(blog => blog.user.email === emailToSearch);
+
 
     return {
         blogs, blogNotification,
@@ -318,7 +324,7 @@ export const blogStore = defineStore('blogStore', () => {
         syncDataBase, clearBlogs,
         deleteBlog, notification,
         editBlog, addBlog,
-        validationErrors
+        validationErrors, isOwner
     };
 
 });

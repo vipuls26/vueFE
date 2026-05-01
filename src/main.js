@@ -11,9 +11,8 @@ import apiUrl from './services/axios'
 const app = createApp(App)
 
 app.use(router)
-app
-    .component('HeaderComponet', HeaderComponent)
-    .component('FooterComponent', FooterComponent)
+app.component('HeaderComponet', HeaderComponent)
+app.component('FooterComponent', FooterComponent)
 
 // setup pinia 
 const pinia = createPinia()

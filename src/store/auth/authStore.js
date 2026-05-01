@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import apiUrl from "@/services/axios";
-import { blogStore } from "../blog/blogApi";
+import { blogStore } from "../blog/blogStore";
 import router from "@/router";
 
 
