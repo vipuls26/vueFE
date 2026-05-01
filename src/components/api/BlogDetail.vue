@@ -3,14 +3,14 @@ import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import HeaderComponent from '../HeaderComponent.vue';
 import BlogEdit from './BlogEdit.vue';
-import { blogStore } from '@/store/blog/blogApi';
+import { blogStore } from '@/store/blog/blogStore';
 import Swal from 'sweetalert2';
 import TertiaryButton from '../baseButton/TertiaryButton.vue';
 import PrimaryButton from '../baseButton/PrimaryButton.vue';
 import BlogDetailImageComponent from '../blogdetail/BlogDetailImageComponent.vue';
 import CategoryDate from '../blogdetail/CategoryDate.vue';
 import TitleContentComponent from '../blogdetail/TitleContentComponent.vue';
-import { authStore } from '@/store/auth/authstore';
+import { authStore } from '@/store/auth/authStore';
 
 
 const route = useRoute();
@@ -89,7 +89,7 @@ onMounted(async () => {
                     <BlogEdit :blogData="blogstore.blogContent" />
                 </div>
             </div>
-            
+
         </div>
 
         <div v-else class="text-center py-20 text-gray-500">

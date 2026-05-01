@@ -5,7 +5,7 @@ import HeaderComponent from '../HeaderComponent.vue';
 // notification
 import "vue3-toastify/dist/index.css"
 
-import { blogStore } from '@/store/blog/blogApi';
+import { blogStore } from '@/store/blog/blogStore';
 import { ref, watch, onMounted } from 'vue';
 import SecondaryButton from '../baseButton/SecondaryButton.vue';
 import PrimaryButton from '../baseButton/PrimaryButton.vue';
@@ -20,7 +20,7 @@ import SearchButton from '../utlity/SearchButton.vue';
 import PaginationComponent from '../blog/pagination/PaginationComponent.vue';
 import UsernameComponent from '../blog/detail/UsernameComponent.vue';
 import BlogstatusComponent from '../blog/detail/BlogstatusComponent.vue';
-import { authStore } from '@/store/auth/authstore';
+import { authStore } from '@/store/auth/authStore';
 
 const blogstore = blogStore();
 const searchQuery = ref(null);
@@ -35,6 +35,7 @@ onMounted(() => {
     blogstore.fetchBlogs();
     blogstore.fetchCategories();
 });
+
 
 
 let timer;
@@ -55,9 +56,7 @@ watch(searchQuery, (newValue) => {
     <div class="dakr:bg-slate-900 p-8">
 
         <!-- category + search -->
-        <div class="flex justify-between pb-3">
-
-            <!-- blog category -->
+        <!-- <div class="flex justify-between pb-3">
             <div class="flex flex-wrap gap-2">
 
                 <button @click="blogstore.clearFilters()"
@@ -77,11 +76,53 @@ watch(searchQuery, (newValue) => {
                 </div>
 
             </div>
-
-            <!-- search btn -->
             <SearchButton v-model="searchQuery" placeholder="search blogs" />
+        </div> -->
+
+        <div class="flex justify-between pb-3">
+            <div class="flex flex-wrap gap-2">
+
+                <div class="md:hidden">
+                    <select
+                        @change="(e) => e.target.value === 'all' ? blogstore.clearFilters() : blogstore.setCategory({ id: parseInt(e.target.value) })"
+                        class="bg-white dark:bg-gray-800 border border-blue-500 text-blue-700 dark:text-white py-2 px-4 rounded-xl focus:outline-none">
+                        <option value="all">All Categories</option>
+                        <option v-for="category in blogstore.category" :key="category.id" :value="category.id"
+                            :selected="blogstore.selectedCategories.includes(category.id)">
+                            {{ category.name }}
+                        </option>
+                    </select>
+
+                    <SearchButton v-model="searchQuery" class="md:hidden lg:hidden" placeholder="search blogs" />
+                </div>
+
+
+                <div class="hidden md:flex flex-wrap gap-2">
+                    <div>
+                        <button @click="blogstore.clearFilters()"
+                            class="bg-transparent hover:bg-blue-500 text-blue-700 dark:text-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-4xl">
+                            All
+                        </button>
+                    </div>
+
+
+                    <div v-for="category in blogstore.category" :key="category.id">
+                        <button @click="blogstore.setCategory(category)"
+                            :class="[blogstore.selectedCategories.includes(category.id) ? 'bg-blue-500 text-white border-transparent' : 'bg-transparent text-blue-700 border-blue-500 dark:text-white']"
+                            class="hover:bg-blue-600 font-semibold py-2 px-4 border hover:text-white rounded-4xl transition-color">
+                            {{ category.name }}
+                        </button>
+                    </div>
+
+
+                    <SearchButton v-model="searchQuery" placeholder="search blogs" />
+                </div>
+            </div>
+
 
         </div>
+
+
 
         <!-- loading -->
         <div v-if="blogstore.loading"
@@ -184,8 +225,8 @@ watch(searchQuery, (newValue) => {
                                         <BadgeComponent :category="blog?.category?.name"></BadgeComponent>
                                         <ContentComponent :content="blog?.content"></ContentComponent>
                                     </div>
-
-                                    <div v-if="authstore.user === blog.user?.email">
+                                    
+                                    <div v-if="blogstore.isOwner">
                                         <StatusComponent> </StatusComponent>
                                     </div>
 

@@ -1,7 +1,7 @@
 <script setup>
 
 import router from '@/router';
-import { authStore } from '@/store/auth/authstore';
+import { authStore } from '@/store/auth/authStore';
 
 import { onMounted } from 'vue';
 

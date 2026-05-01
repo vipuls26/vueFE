@@ -3,7 +3,7 @@
 import { ref, onUnmounted } from 'vue';
 import router from '@/router';
 import { toast } from 'vue3-toastify';
-import { authStore } from '@/store/auth/authstore';
+import { authStore } from '@/store/auth/authStore';
 
 // validation library
 import { Form, Field, ErrorMessage } from 'vee-validate';
@@ -74,7 +74,8 @@ onUnmounted(() => {
                     </div>
                     <!-- confirm password password_confirmation -->
                     <div>
-                        <BaseInputLabel label="password_confirmation" html-for="password_confirmation" :required="true" />
+                        <BaseInputLabel label="password_confirmation" html-for="password_confirmation"
+                            :required="true" />
                         <BaseInput type="password" name="password_confirmation" :placeholder="'enter confirm password'"
                             :servererror="authstore.validationErrors?.password_confirmation" />
                     </div>
